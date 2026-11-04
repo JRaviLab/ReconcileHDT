@@ -29,13 +29,13 @@ print(lincs_path)
 
 ```{r Individual signatures : obtain up/dn genes from up/dn signatures}
 # get upregulated gene list
-up_TB_signature_path = here("data/signatures/RNAseq/up/GSE64179_MTB_control_blood_dendritic_cells_up.tsv")
+up_TB_signature_path = here("data/signatures/RNAseq/up/GSE64179_s18_d15_up.tsv")
 up_genes = get_updn_signature(up_TB_signature_path, L1000 = TRUE)
 print("Example up genes:")
 print(head(up_genes))
 
 # get downregulated gene list
-dn_TB_signature_path = here("data/signatures/RNAseq/dn/GSE64179_MTB_control_blood_dendritic_cells_dn.tsv")
+dn_TB_signature_path = here("data/signatures/RNAseq/dn/GSE64179_s18_d15_dn.tsv")
 dn_genes = get_updn_signature(dn_TB_signature_path, L1000 = TRUE)
 print("Example down genes:")
 print(head(dn_genes))
@@ -44,8 +44,8 @@ print(head(dn_genes))
 #### full signatures (up+dn) for XCor and XSpe (correlation-based methods)
 
 ```{r Individual signatures : combine up and dn signatures into a full signature}
-up_TB_signature = read_tsv(here("data/signatures/RNAseq/up/GSE64179_MTB_control_blood_dendritic_cells_up.tsv"))
-dn_TB_signature = read_tsv(here("data/signatures/RNAseq/dn/GSE64179_MTB_control_blood_dendritic_cells_dn.tsv"))
+up_TB_signature = read_tsv(here("data/signatures/RNAseq/up/GSE64179_s18_d15_up.tsv"))
+dn_TB_signature = read_tsv(here("data/signatures/RNAseq/dn/GSE64179_s18_d15_dn.tsv"))
 full_signature = combine_signatures(up_signature = up_TB_signature, 
                                     dn_signature = dn_TB_signature, 
                                     L1000 = TRUE)
@@ -53,7 +53,7 @@ head(full_signature)
 ```
 
 ```{r Individual signatures : preping full signatures for correlation-based methods}
-full_TB_signature_path = here("data/signatures/RNAseq/full/GSE64179_MTB_control_blood_dendritic_cells_full.tsv")
+full_TB_signature_path = here("data/signatures/RNAseq/full/GSE64179_s18_d15_full.tsv")
 full_TB_signature = get_full_signature(full_sig_path = full_TB_signature_path,
                     L1000 = TRUE)
 head(full_TB_signature)

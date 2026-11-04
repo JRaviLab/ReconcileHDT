@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to `integrative-drugrep-tb`!
+Thank you for your interest in contributing to `ReconcileHDT`!
 
 ## Setting up the environment
 
@@ -14,7 +14,7 @@ install.packages("renv")
 renv::restore()
 ```
 
-R 4.4.2 and Bioconductor 3.20 are required. The Python notebook (`scripts/00_cleanup_expression_data.ipynb`) requires Python 3 with standard scientific libraries.
+R 4.6.1 and Bioconductor 3.23 are required (see `renv.lock`), as is the [Quarto](https://quarto.org/docs/get-started/) CLI for rendering `.qmd` notebooks. The Python notebooks in `DataCuration/` require Python 3 with standard scientific libraries.
 
 ## Code style
 
@@ -29,4 +29,4 @@ R 4.4.2 and Bioconductor 3.20 are required. The Python notebook (`scripts/00_cle
 
 ## Questions
 
-Open a [GitHub Issue](https://github.com/JRaviLab/integrative-drugrep-tb/issues) for bugs or feature requests, or contact the [JRaviLab](https://jravilab.github.io/) or [KrishnanLab](https://www.thekrishnanlab.org).
+Open a [GitHub Issue](https://github.com/JRaviLab/ReconcileHDT/issues) for bugs or feature requests, or contact the [JRaviLab](https://jravilab.github.io/) or [KrishnanLab](https://www.thekrishnanlab.org).

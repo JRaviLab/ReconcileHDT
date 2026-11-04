@@ -1,6 +1,6 @@
 # Results
 
-Computational outputs from the drug repurposing pipeline, organized by data type and scoring method.
+Computational outputs from the ReconcileHDT pipeline, organized by data type and scoring method.
 
 ```
 results/
@@ -9,7 +9,7 @@ results/
 │   ├── LINCS/         # LINCS connectivity scores per signature
 │   ├── Cor/           # Spearman/Pearson correlation scores per signature
 │   ├── 03_methodwise/  # Individual drug rankings across methods based on consistency and aggregated signatures' drug rankings per method
-|   └── 04_rank_aggregation/ # Aggregated drug rankings across methods
+│   └── 04_rank_aggregation/ # Aggregated drug rankings across methods
 └── RNAseq/
     └── (same structure as microarray/)
 combined_drug_predictions.tsv        # merged predictions across platforms

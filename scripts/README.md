@@ -1,6 +1,6 @@
 # Scripts
 
-Primary codebase for the integrative TB drug repurposing pipeline. Scripts are numbered to reflect execution order.
+Primary codebase for the ReconcileHDT pipeline. Scripts are numbered to reflect execution order.
 
 | Script | Type | Purpose |
 |--------|------|---------|

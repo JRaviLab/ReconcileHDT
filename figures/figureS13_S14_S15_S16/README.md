@@ -39,7 +39,7 @@ Documentation:
 ## 1. Retrieve LINCS level 3 expression drug data and metadata
 ### LINCS level 3 expression data
   - Access/obtain using [`cmapPy`](https://github.com/cmap/cmapPy) Python package; [descriptive details](https://clue.io/connectopedia/guide_to_geo_l1000_data) on LINCS data.
-  - Since we are extracting control samples only, we will be using LINCS data level 3 which is normalized and inferred. The data could be downloaded from [this GEO site]([https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE70138](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE92742)) or using the command lines below.
+  - Since we are extracting control samples only, we will be using LINCS data level 3 which is normalized and inferred. The data could be downloaded from [this GEO site](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE92742) or using the command lines below.
 
   ```
   mkdir -p data/baseline_analysis && \
@@ -83,9 +83,9 @@ This script performs:
 - saving processed drug control data for downstream analysis
 
 ## 3. Baseline comparison analysis
-To reproduce the baseline comparison and Figure S10, run the notebook:
+To reproduce the baseline comparison and Figures S13–S16, run the notebook:
 ```
-figures/figureS10/suppl_baseline_comparison.ipynb
+figures/figureS13_S14_S15_S16/suppl_baseline_comparison.ipynb
 ```
 
 This notebook performs:

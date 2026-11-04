@@ -1,21 +1,21 @@
-# Integrative transcriptome-based drug repurposing in tuberculosis
+# ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This repository contains the analysis code and processed data for the study:
 
-> Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A\*, Ravi J\*. _Integrative transcriptome-based drug repurposing in tuberculosis._ bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
+> Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A\*, Ravi J\*. _ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis._ bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
 >
 > \* co-corresponding authors
 
-We integrate transcriptomic signatures from multiple TB microarray and RNAseq datasets with various disease-drug connectivity scores to identify and prioritize HDT candidates for tuberculosis.
+**ReconcileHDT** integrates transcriptomic signatures from multiple TB microarray and RNAseq datasets with various disease-drug connectivity scores to identify and prioritize host-directed therapy (HDT) candidates for tuberculosis.
 
 ---
 
 ## Repository structure
 
 ```
-integrative-drugrep-tb/
+ReconcileHDT/
 ├── scripts/         # R and Python analysis scripts (numbered by step)
 ├── vignette/        # Quarto documents with worked examples for each step
 ├── evaluation/      # Pubmed scraper and outputs
@@ -30,7 +30,7 @@ integrative-drugrep-tb/
 
 ## Workflow
 
-The analysis follows a five-step pipeline:
+The analysis follows a six-step pipeline (steps 00–05):
 
 | Step   | Scripts                                                                                                                       | Description                                                                   |
 | ------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -49,8 +49,10 @@ See [`scripts/README.md`](scripts/README.md) for a full table of scripts and the
 
 ### Requirements
 
-- R 4.6.1 with Bioconductor 3.23
-- Python 3 (for [HDT literature evidence retreival](https://github.com/JRaviLab/integrative-drugrep-tb/tree/main/evaluation) and [baseline analysis](https://github.com/JRaviLab/integrative-drugrep-tb/tree/main/figures/figureS13_S14_S15_S16) 
+- R 4.6.1 with Bioconductor 3.23 (R packages are pinned in `renv.lock`; see Setup below)
+- [Quarto](https://quarto.org/docs/get-started/) CLI, to render the `.qmd` notebooks in `vignette/` and `figures/` (bundled with RStudio and Positron; make sure `quarto` is on your `PATH` to render from the terminal)
+- Python 3, for [HDT literature evidence retrieval](https://github.com/JRaviLab/ReconcileHDT/tree/main/evaluation), the [baseline analysis](https://github.com/JRaviLab/ReconcileHDT/tree/main/figures/figureS13_S14_S15_S16), and the notebooks in `DataCuration/`. Packages imported by these scripts: `numpy`, `pandas`, `scipy`, `scikit-learn`, `matplotlib`, `seaborn`, `plotly`, `networkx`, `joblib`, `tqdm`, `biopython`, `rbo`, and `cmapPy` (no pinned Python environment is provided yet)
+- NCBI credentials (email and API key) in a config file, for `evaluation/DrugLitSearch.py`
 
 ### Setup
 
@@ -90,7 +92,7 @@ Arguments:
 #### 1.2 RNAseq individual disease signatures
 
 ```
-Rscript scripts/00_multids_RNAseq_DESeq2.R \
+Rscript scripts/00_multids_RNAseq_DEwithDESeq2.R \
   data/RNAseq_data_forDE/clean_TB_sample_metadata_classification.tsv \
   0.05
 ```
@@ -126,7 +128,7 @@ An example command to quantify candidate drugs predicted to reverse RNAseq **ind
 
 ```
 Rscript scripts/02_drugrep_get_prediction_indiv.R \
-  data/signatures/RNASeq_TB_signature_run_info.tsv \
+  data/signatures/RNAseq_TB_signature_run_info.tsv \
   data/signatures/RNAseq \
   LINCS LINCS \
   results/RNAseq/LINCS
@@ -134,7 +136,7 @@ Rscript scripts/02_drugrep_get_prediction_indiv.R \
 
 Arguments:
 
-- `sig_metadata_path` Path to the RNAseq signature metadata file (default: `data/signatures/RNASeq_TB_signature_run_info.tsv`).
+- `sig_metadata_path` Path to the RNAseq signature metadata file (default: `data/signatures/RNAseq_TB_signature_run_info.tsv`).
 - `sig_data_path` Directory containing RNAseq signature data files (default: `data/signatures/RNAseq`).
 - `drugdb_name` Drug perturbation database to use. Options: LINCS, CMAP (default: `LINCS`).
 - `score_method` Method used to compute signature similarity scores. Options: `LINCS`, `CMAP`, `Cor_spearman`, `Cor_pearson` (default: `LINCS`).
@@ -150,7 +152,7 @@ Rscript scripts/02_drugrep_get_prediction_aggr.R RNAseq LINCS LINCS
 
 Arguments:
 
-- `technology` Type of transcriptomic data used to generate aggregated signatures. Options: `microarray` or `RNAseq` (default: `RNASeq`)
+- `technology` Type of transcriptomic data used to generate aggregated signatures. Options: `microarray` or `RNAseq` (default: `RNAseq`)
 - `score_method` Method used to compute disease-drug connectivity scores. Options: `LINCS`, `CMAP`, `Cor_spearman`, `Cor_pearson` (default: `LINCS`).
 - `drugdb_name` Drug perturbation database to use for querying signatures. Options: `LINCS`, `CMAP` (default: `LINCS`).
 
@@ -184,7 +186,7 @@ vignette/05_high_confidence_drug_prediction.qmd
 
 **NOTES:**
 
-- Additional downstream analyses (e.g., pathway and baseline analyses) can be reproduced using the .qmd notebooks provided in the `vignettes/` directory.
+- Additional downstream analyses (e.g., pathway and baseline analyses) can be reproduced using the .qmd notebooks provided in the `vignette/` directory.
 - All figures can be reproduced using the .qmd notebooks provided in the `figures/` directory.
 
 ---
@@ -195,7 +197,7 @@ If you use this code or data, please cite:
 
 ```
 Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A*, Ravi J*.
-Integrative transcriptome-based drug repurposing in tuberculosis.
+ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis.
 bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
 (* co-corresponding authors)
 ```

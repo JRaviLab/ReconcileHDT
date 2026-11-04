@@ -1,6 +1,6 @@
 # Evaluation od predicted drugs against drugs supported by TB HDT literature evidence
 # Pubmed search on all FDA-approved drugs was performed on September 25, 2026 by Ling Thang
-# This notebook contains step-by-step evaluation of the top 20 drugs predicted using (i) our integrative approach, (2) the six connectivity methods across microarray/RNAseq individual signatures and aggregated signatures
+# This notebook contains step-by-step evaluation of the top 20 drugs predicted using (i) ReconcileHDT, (2) the six connectivity methods across microarray/RNAseq individual signatures and aggregated signatures
 # Last modified: 09/28/26; updated figures with new search results with evidence level stratification
 # Kewalin Samart
 
@@ -246,10 +246,10 @@ method_lists <- list(
   WCS_RNAseq_aggr = allscores_aggrSig_RNAseq$WCS[1:20]
 )
 
-integrative_pred = read_tsv(here("results/final_high_confidence_drug_predictions.tsv"), show_col_types = FALSE)
-integrative_pred_list <- integrative_pred$drug_name[1:20]
+reconcilehdt_pred = read_tsv(here("results/final_high_confidence_drug_predictions.tsv"), show_col_types = FALSE)
+reconcilehdt_pred_list <- reconcilehdt_pred$drug_name[1:20]
 
-method_lists$Integrative <- integrative_pred_list
+method_lists$ReconcileHDT <- reconcilehdt_pred_list
 ```
 
 ```{r related statistics of predicted drugs and the labels}
@@ -359,7 +359,7 @@ positive_evidence <- labels %>%
 
 print(positive_evidence)
 
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figureS9_evidence_stratification", LABEL_DEF, ".pdf")), 
   width = 8, height = 6)
 
@@ -438,7 +438,7 @@ rank_df <- rank_df %>%
     DataType = case_when(
       grepl("rnaseq", Method, ignore.case = TRUE) ~ "RNAseq",
       grepl("microarray", Method, ignore.case = TRUE) ~ "Microarray",
-      Score == "Integrative" ~ NA_character_,
+      Score == "ReconcileHDT" ~ NA_character_,
       TRUE ~ NA_character_
     )
   )
@@ -452,30 +452,30 @@ score_order <- rank_df %>%
 
 rank_df$Score <- factor(rank_df$Score, levels = score_order)
 
-# duplicate Integrative rows into both facets
-integrative_rows <- rank_df %>%
-  filter(as.character(Score) == "Integrative") %>%
+# duplicate ReconcileHDT rows into both facets
+reconcilehdt_rows <- rank_df %>%
+  filter(as.character(Score) == "ReconcileHDT") %>%
   select(-DataType) %>%
   crossing(DataType = c("RNAseq", "Microarray"))
 
-# combine with all non-Integrative rows
+# combine with all non-ReconcileHDT rows
 rank_df_plot <- rank_df %>%
-  filter(as.character(Score) != "Integrative") %>%
-  bind_rows(integrative_rows)
+  filter(as.character(Score) != "ReconcileHDT") %>%
+  bind_rows(reconcilehdt_rows)
 
 # set plotting order manually if you want a specific order
 rank_df_plot$Score <- factor(
   as.character(rank_df_plot$Score),
-  levels = rev(c("CMAP", "WCS", "NCS", "Tau", "Pearson", "Spearman", "Integrative"))
+  levels = rev(c("CMAP", "WCS", "NCS", "Tau", "Pearson", "Spearman", "ReconcileHDT"))
 )
 
-# calculate median rank for Integrative
-median_integrative <- rank_df_plot %>%
-  filter(Score == "Integrative") %>%
+# calculate median rank for ReconcileHDT
+median_reconcilehdt <- rank_df_plot %>%
+  filter(Score == "ReconcileHDT") %>%
   summarise(med = median(Rank, na.rm = TRUE)) %>%
   pull(med)
 
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figureS8_rank_distributions_", LABEL_DEF, ".pdf")), 
   width = 10, height = 12)
 
@@ -485,12 +485,12 @@ ggplot(
     x = Score,
     y = Rank,
     fill = signature_type,
-    alpha = Score == "Integrative"
+    alpha = Score == "ReconcileHDT"
   )
 ) +
   geom_boxplot(color = "black") +
   geom_hline(
-    yintercept = median_integrative,
+    yintercept = median_reconcilehdt,
     linetype = "dashed",
     color = "red",
     linewidth = 0.5
@@ -558,66 +558,66 @@ results_df <- do.call(rbind, results)
 ```
 
 ```{r plot precision at K by technology and signature type}
-# add signature_type and IsIntegrative
+# add signature_type and IsReconcileHDT
 results_df <- results_df %>%
   mutate(
     DataType = ifelse(grepl("RNAseq", Method), "RNAseq", "Microarray"),
     signature_type = case_when(
       grepl("ggr", Method) ~ "Aggregated signature",
-      grepl("Integrative", Method) ~ "Aggregated signature", # Integrative treated as solid
+      grepl("ReconcileHDT", Method) ~ "Aggregated signature", # ReconcileHDT treated as solid
       TRUE ~ "Individual signature"
     ),
     Score = gsub("_.*", "", Method),
-    IsIntegrative = grepl("Integrative", Method)
+    IsReconcileHDT = grepl("ReconcileHDT", Method)
   )
 
-# duplicate Integrative rows into all facets without adding a new facet row
-integrative_rows <- results_df %>%
-  filter(IsIntegrative) %>%
+# duplicate ReconcileHDT rows into all facets without adding a new facet row
+reconcilehdt_rows <- results_df %>%
+  filter(IsReconcileHDT) %>%
   select(-DataType, -signature_type) %>%  # remove to avoid duplication errors
   crossing(
     DataType = c("RNAseq", "Microarray"),
-    signature_type = c("Aggregated signature", "Individual signature") # Integrative appears in both facets
+    signature_type = c("Aggregated signature", "Individual signature") # ReconcileHDT appears in both facets
   )
 
-results_df_plot <- bind_rows(results_df, integrative_rows)
+results_df_plot <- bind_rows(results_df, reconcilehdt_rows)
 
 # Define colors
 score_colors <- c(
-  "Integrative" = "black",
+  "ReconcileHDT" = "black",
   setNames(brewer.pal(length(unique(results_df$Score)), "Dark2"),
            unique(results_df$Score))
 )
 
 
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figure4a_precision@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 8)
 
 ggplot(results_df_plot, aes(x = K, y = Precision, group = Method)) +
   
   geom_line(
-    data = subset(results_df_plot, !IsIntegrative),
+    data = subset(results_df_plot, !IsReconcileHDT),
     aes(color = Score, linetype = signature_type),
     linewidth = 1,
     alpha = 0.5
   ) +
   geom_point(
-    data = subset(results_df_plot, !IsIntegrative),
+    data = subset(results_df_plot, !IsReconcileHDT),
     aes(color = Score),
     size = 3,
     alpha = 0.5
   ) +
   
   geom_line(
-    data = subset(results_df_plot, IsIntegrative),
+    data = subset(results_df_plot, IsReconcileHDT),
     aes(color = Score),
     linewidth = 1.5,
     linetype = "solid",
     alpha = 1
   ) +
   geom_point(
-    data = subset(results_df_plot, IsIntegrative),
+    data = subset(results_df_plot, IsReconcileHDT),
     aes(color = Score),
     size = 3.5,
     alpha = 1
@@ -651,13 +651,13 @@ ggplot(results_df_plot, aes(x = K, y = Precision, group = Method)) +
 dev.off()
 ```
 
-```{r plot integrative precision @K against average precision @K across technologies of other methods}
+```{r plot ReconcileHDT precision @K against average precision @K across technologies of other methods}
 # ensure signature_type exists
 results_df <- results_df %>%
   mutate(
     signature_type = case_when(
       grepl("ggr", Method) ~ "Aggregated signature",
-      grepl("Integrative", Method) ~ "Aggregated signature", # Integrative treated as Aggregated
+      grepl("ReconcileHDT", Method) ~ "Aggregated signature", # ReconcileHDT treated as Aggregated
       TRUE ~ "Individual signature"
     ),
     Score = gsub("_.*", "", Method)
@@ -669,22 +669,22 @@ avg_df <- results_df %>%
   summarise(AveragePrecision = mean(Precision, na.rm = TRUE), .groups = "drop")
 
 score_colors <- c(
-  "Integrative" = "black",
+  "ReconcileHDT" = "black",
   setNames(RColorBrewer::brewer.pal(length(unique(results_df$Score)), "Dark2"),
            unique(results_df$Score))
 )
 
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figure4c_average_precision@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 6)
 
 ggplot(avg_df, aes(x = K, y = AveragePrecision, color = Score)) +
   geom_line(
-    aes(linetype = signature_type, alpha = ifelse(Score == "Integrative", 1, 0.5)),
+    aes(linetype = signature_type, alpha = ifelse(Score == "ReconcileHDT", 1, 0.5)),
     linewidth = 1.2
   ) +
   geom_point(
-    aes(alpha = ifelse(Score == "Integrative", 1, 0.5)),
+    aes(alpha = ifelse(Score == "ReconcileHDT", 1, 0.5)),
     size = 3
   ) +
   scale_color_manual(values = score_colors) +
@@ -714,63 +714,63 @@ dev.off()
 ```
 
 ```{r plot recall at K by technology and signature type}
-# add signature_type and IsIntegrative
+# add signature_type and IsReconcileHDT
 results_df <- results_df %>%
   mutate(
     DataType = ifelse(grepl("RNAseq", Method), "RNAseq", "Microarray"),
     signature_type = case_when(
       grepl("ggr", Method) ~ "Aggregated signature",
-      grepl("Integrative", Method) ~ "Aggregated signature", # Integrative treated as solid
+      grepl("ReconcileHDT", Method) ~ "Aggregated signature", # ReconcileHDT treated as solid
       TRUE ~ "Individual signature"
     ),
     Score = gsub("_.*", "", Method),
-    IsIntegrative = grepl("Integrative", Method)
+    IsReconcileHDT = grepl("ReconcileHDT", Method)
   )
 
-# duplicate Integrative rows into all facets without adding a new facet row
-integrative_rows <- results_df %>%
-  filter(IsIntegrative) %>%
+# duplicate ReconcileHDT rows into all facets without adding a new facet row
+reconcilehdt_rows <- results_df %>%
+  filter(IsReconcileHDT) %>%
   select(-DataType, -signature_type) %>%  # remove to avoid duplication errors
   crossing(
     DataType = c("RNAseq", "Microarray"),
-    signature_type = c("Aggregated signature", "Individual signature") # Integrative appears in both facets
+    signature_type = c("Aggregated signature", "Individual signature") # ReconcileHDT appears in both facets
   )
 
-results_df_plot <- bind_rows(results_df, integrative_rows)
+results_df_plot <- bind_rows(results_df, reconcilehdt_rows)
 
 score_colors <- c(
-  "Integrative" = "black",
+  "ReconcileHDT" = "black",
   setNames(brewer.pal(length(unique(results_df$Score)), "Dark2"),
            unique(results_df$Score))
 )
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figure4b_recall@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 8)
 
 ggplot(results_df_plot, aes(x = K, y = Recall, group = Method)) +
   
   geom_line(
-    data = subset(results_df_plot, !IsIntegrative),
+    data = subset(results_df_plot, !IsReconcileHDT),
     aes(color = Score, linetype = signature_type),
     linewidth = 1,
     alpha = 0.5
   ) +
   geom_point(
-    data = subset(results_df_plot, !IsIntegrative),
+    data = subset(results_df_plot, !IsReconcileHDT),
     aes(color = Score),
     size = 3,
     alpha = 0.5
   ) +
   
   geom_line(
-    data = subset(results_df_plot, IsIntegrative),
+    data = subset(results_df_plot, IsReconcileHDT),
     aes(color = Score),
     linewidth = 1.5,
     linetype = "solid",
     alpha = 1
   ) +
   geom_point(
-    data = subset(results_df_plot, IsIntegrative),
+    data = subset(results_df_plot, IsReconcileHDT),
     aes(color = Score),
     size = 3.5,
     alpha = 1
@@ -804,13 +804,13 @@ ggplot(results_df_plot, aes(x = K, y = Recall, group = Method)) +
 dev.off()
 ```
 
-```{r plot integrative recall @K against average recall @K across technologies of other methods}
+```{r plot ReconcileHDT recall @K against average recall @K across technologies of other methods}
 # ensure signature_type exists
 results_df <- results_df %>%
   mutate(
     signature_type = case_when(
       grepl("ggr", Method) ~ "Aggregated signature",
-      grepl("Integrative", Method) ~ "Aggregated signature", # Integrative treated as Aggregated
+      grepl("ReconcileHDT", Method) ~ "Aggregated signature", # ReconcileHDT treated as Aggregated
       TRUE ~ "Individual signature"
     ),
     Score = gsub("_.*", "", Method)
@@ -822,22 +822,22 @@ avg_df_recall <- results_df %>%
   summarise(AverageRecall = mean(Recall, na.rm = TRUE), .groups = "drop")
 
 score_colors <- c(
-  "Integrative" = "black",
+  "ReconcileHDT" = "black",
   setNames(RColorBrewer::brewer.pal(length(unique(results_df$Score)), "Dark2"),
            unique(results_df$Score))
 )
 
-pdf(here("figures/figure4/",
+pdf(here("figures/figure4_S8_S9/",
   paste0("figure4d_average_recall@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 6)
 
 ggplot(avg_df_recall, aes(x = K, y = AverageRecall, color = Score)) +
   geom_line(
-    aes(linetype = signature_type, alpha = ifelse(Score == "Integrative", 1, 0.5)),
+    aes(linetype = signature_type, alpha = ifelse(Score == "ReconcileHDT", 1, 0.5)),
     linewidth = 1.2
   ) +
   geom_point(
-    aes(alpha = ifelse(Score == "Integrative", 1, 0.5)),
+    aes(alpha = ifelse(Score == "ReconcileHDT", 1, 0.5)),
     size = 3
   ) +
   scale_color_manual(values = score_colors) +
@@ -979,7 +979,7 @@ ggplot(drug_evidence_counts, aes(x = strongest, y = n, fill = strongest)) +
 ```
 
 ```{r top 5 predictions per method}
-# method_lists (top 20 per method) and integrative_pred_list already exist
+# method_lists (top 20 per method) and reconcilehdt_pred_list already exist
 # from the "select only the top 20 drugs" chunk above; just take the first
 # 5 of each rather than re-reading every RDS file a second time
 method_lists_top5 <- lapply(method_lists, function(drugs) drugs[1:5])
@@ -1029,7 +1029,7 @@ hdt_check_top5 <- top5_by_method %>%
   left_join(highest_HDT, by = "drug") %>%
   select(method, rank, drug_name, highest_HDT_evidence, highest_HDT_PMID, n_hdt, n_review)
 
-write_csv(hdt_check_top5, here("figures/figure4/top5_HDT_literature_by_method.csv"))
+write_csv(hdt_check_top5, here("figures/figure4_S8_S9/top5_HDT_literature_by_method.csv"))
 
 # same drug can be top-5 for several methods; one row per unique drug for
 # the literature check itself, methods it appeared in kept for context
@@ -1046,20 +1046,20 @@ hdt_check_top5_unique <- hdt_check_top5 %>%
   ) %>%
   arrange(desc(n_methods), drug_name)
 
-write_csv(hdt_check_top5_unique, here("figures/figure4/top5_HDT_literature_unique.csv"))
+write_csv(hdt_check_top5_unique, here("figures/figure4_S8_S9/top5_HDT_literature_unique.csv"))
 cat("unique drugs across all top-5 lists:", nrow(hdt_check_top5_unique), "\n")
 ```
 
-```{r HDT-positive drugs outside the 20 Integrative candidates}
+```{r HDT-positive drugs outside the 20 ReconcileHDT candidates}
 # drugs with HDT evidence that other methods surface in their top 5, but
-# that Integrative's own top 20 never ranked highly enough to include.
-# integrative_pred_list (from the "select only the top 20 drugs" chunk) is
+# that ReconcileHDT's own top 20 never ranked highly enough to include.
+# reconcilehdt_pred_list (from the "select only the top 20 drugs" chunk) is
 # the authoritative current top 20, so reuse it rather than a second,
 # hardcoded copy that could drift out of sync
 non_candidate_hdt <- hdt_check_top5_unique %>%
-  filter(n_hdt > 0, !(drug_name %in% tolower(integrative_pred_list))) %>%
+  filter(n_hdt > 0, !(drug_name %in% tolower(reconcilehdt_pred_list))) %>%
   arrange(desc(n_hdt))
 
-write_csv(non_candidate_hdt, here("figures/figure4/top5_HDT_non_candidate_drugs.csv"))
+write_csv(non_candidate_hdt, here("figures/figure4_S8_S9/top5_HDT_non_candidate_drugs.csv"))
 print(non_candidate_hdt, n = Inf)
 ```
