@@ -25,7 +25,7 @@ print(lincs_path)
 
 #### Individual signatures
 
-#### up and down regulated gene sets for CMAP 1.0 and LINCS methods (enrichment-based methods)
+#### up and down regulated gene sets for CMap 1.0 and LINCS methods (enrichment-based methods)
 
 ```{r Individual signatures : obtain up/dn genes from up/dn signatures}
 # get upregulated gene list
@@ -61,7 +61,7 @@ head(full_TB_signature)
 
 #### Aggregated signatures
 
-#### up and down regulated gene sets for CMAP 1.0 and LINCS methods (enrichment-based methods)
+#### up and down regulated gene sets for CMap 1.0 and LINCS methods (enrichment-based methods)
 
 ```{r Aggregated signatures: obtain up/dn genes from up/dn signatures}
 # get upregulated gene list
@@ -96,9 +96,9 @@ head(full_aggr_TB_signature)
 
 ### Individual signatures
 
-#### Enrichment-based methods: CMAP1.0 (CS), LINCS (WCS, NCS, Tau)
+#### Enrichment-based methods: CMap 1.0 (CS), LINCS (WCS, NCS, Tau)
 
-```{r Individual signatures : CMAP 1.0}
+```{r Individual signatures : CMap 1.0}
 cmap1.0_res = compute_CMap1_scores(up_genes = up_genes, 
                                    dn_genes = dn_genes, 
                                    db_path = lincs_path)
@@ -134,9 +134,9 @@ print(dim(xspe_res))
 
 ### Aggregated signatures
 
-#### Enrichment-based methods: CMAP1.0 (CS), LINCS (WCS, NCS, Tau)
+#### Enrichment-based methods: CMap 1.0 (CS), LINCS (WCS, NCS, Tau)
 
-```{r Aggregated signatures : CMAP 1.0}
+```{r Aggregated signatures : CMap 1.0}
 cmap1.0_aggr_res = compute_CMap1_scores(up_genes = up_aggr_genes, 
                                    dn_genes = dn_aggr_genes, 
                                    db_path = lincs_path)

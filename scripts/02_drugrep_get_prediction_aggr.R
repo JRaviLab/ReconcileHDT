@@ -18,6 +18,11 @@ tech <- ifelse(length(args) >= 1, args[1], "RNAseq")
 score_method <- ifelse(length(args) >= 2, args[2], "LINCS")
 db_name <- ifelse(length(args) >= 3, args[3], "LINCS")
 
+# accept values case-insensitively (e.g., CMap or CMAP); canonical spelling is used in output paths
+tech <- match_token(tech, c("microarray", "RNAseq"))
+score_method <- match_token(score_method, c("LINCS", "CMAP", "Cor_spearman", "Cor_pearson"))
+db_name <- match_token(db_name, c("LINCS", "CMAP"))
+
 print(paste0("Technology: ", tech))
 print(paste0("Method: ", score_method))
 print(paste0("DB: ", db_name))

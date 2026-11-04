@@ -450,8 +450,8 @@ def plot_tissue_heatmaps(
     mat = tissue_matrix.values.astype(float)
 
     if corr_type == 'lasso':
-        corr_title = 'LASSO coefficients'
-        corr_subtitle = 'LASSO coef.'
+        corr_title = 'Lasso coefficients'
+        corr_subtitle = 'Lasso coef.'
     elif corr_type == 'rbo':
         corr_title = 'RBO scores'
         corr_subtitle = 'RBO'

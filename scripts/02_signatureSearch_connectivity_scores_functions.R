@@ -1,4 +1,4 @@
-# functions for drug search by CMap1.0, CMap2.0, and Correlation-based connectivity scores
+# functions for drug search by CMap 1.0, CMap 2.0, and Correlation-based connectivity scores
 
 # loading the needed libraries
 library(signatureSearch)
@@ -10,6 +10,15 @@ library(dplyr)
 
 # load signature preparation functions
 source(here("scripts/01_signature_landmark_prep_functions.R"))
+
+match_token <- function(x, choices) {
+  #' @description This function matches a user-supplied value to its canonical spelling in a set of choices, ignoring case (e.g., "CMap" -> "CMAP")
+  #' @param x a string given by the user
+  #' @param choices a character vector of canonical values (also used in output file and folder names)
+  #' @returns the matching canonical value, or x unchanged if there is no match
+  matched <- choices[tolower(choices) == tolower(x)]
+  if (length(matched) == 1) matched else x
+}
 
 combine_signatures <- function(up_signature, dn_signature, L1000 = TRUE) {
   #' @description This function combines up and dn input signatures into a full signature
@@ -63,11 +72,11 @@ get_updn_signature <- function(updn_sig_path, L1000 = TRUE) {
 }
 
 setup_cmap1db <- function() {
-  #' @description  This function sets up CMAP database
+  #' @description  This function sets up CMap database
   #' @details source code from signatureSearchData package manual
   #' @source  https://bioconductor.org/packages/release/data/experiment/manuals/signatureSearchData/man/signatureSearchData.pdf
-  #' @details CMap2 LFC (log2 fold change) Signature Database
-  #' @returns cmap_path path to CMAP database
+  #' @details CMap 2.0 LFC (log2 fold change) Signature Database
+  #' @returns cmap_path path to CMap database
 
   eh <- ExperimentHub()
   query(eh, c("signatureSearchData", "cmap"))
@@ -93,11 +102,11 @@ setup_lincsdb <- function() {
 }
 
 compute_CMap1_scores <- function(up_genes, dn_genes, db_path) {
-  #' @description This function quantifies drug candidates for a given pair of up/dn ENTREZID vectors prioritized by cmap1
+  #' @description This function quantifies drug candidates for a given pair of up/dn ENTREZID vectors prioritized by CMap 1.0
   #' @param up_genes up GeneID (Entrezid; character vector)
   #' @param dn_genes dn GeneID (Entrezid; character vector)
   #' @param db_path obtained form either setup_cmap1db() or setup_lincsdb() functions
-  #' @returns final_res a data frame of drug candidates prioritized by cmap1
+  #' @returns final_res a data frame of drug candidates prioritized by CMap 1.0
 
   # get CMap 1.0 connectivity scores
   qsig <- qSig(

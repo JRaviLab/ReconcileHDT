@@ -5,7 +5,7 @@ Primary codebase for the ReconcileHDT pipeline. Scripts are numbered to reflect 
 | Script | Type | Purpose |
 |--------|------|---------|
 | `00_multids_microarray_DEwithlimma.R` | R | Differential expression across microarray datasets (limma) |
-| `00_multids_RNAseq_DEwithDESeq2.R` | R | Differential expression across RNA-seq datasets (DESeq2) |
+| `00_multids_RNAseq_DEwithDESeq2.R` | R | Differential expression across RNAseq datasets (DESeq2) |
 | `00_background_genes_PA_functions.R` | R | Background gene sets for pathway analysis (GO, KEGG, LINCS) |
 | `00_get_crossSigs_enrichedGO.R` | R | GO enrichment across aggregated signatures |
 | `01_signature_aggregation_functions.R` | R | Aggregate DE signatures across datasets; compute membership/Jaccard matrices |

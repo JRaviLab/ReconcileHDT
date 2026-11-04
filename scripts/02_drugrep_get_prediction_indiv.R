@@ -14,6 +14,10 @@ drugdb_name       <- ifelse(length(args) >= 3, args[3], "LINCS") # "LINCS", "CMA
 score_method      <- ifelse(length(args) >= 4, args[4], "LINCS") # "LINCS", "CMAP", "Cor_spearman", "Cor_pearson"
 output_dir        <- ifelse(length(args) >= 5, args[5], "results/RNAseq/LINCS")
 
+# accept values case-insensitively (e.g., CMap or CMAP); canonical spelling is used in output file names
+drugdb_name <- match_token(drugdb_name, c("LINCS", "CMAP"))
+score_method <- match_token(score_method, c("LINCS", "CMAP", "Cor_spearman", "Cor_pearson"))
+
 # read in metadata file
 data_to_run <- read.delim(here(sig_metadata_path), sep = "\t")
 data_to_run <- data_to_run[which(data_to_run$signature == 1), ]

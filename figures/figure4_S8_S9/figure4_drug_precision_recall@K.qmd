@@ -215,10 +215,10 @@ allscores_aggrSig_microarray <- readRDS(here("results/microarray/04_rank_aggrega
 
 ```{r select only the top 20 drugs for precision and recall calculations}
 method_lists <- list(
-  CMAP_microarray = CMAP_indivSig_TB_microarray$ranked_pert[1:20],
-  CMAP_RNAseq     = CMAP_indivSig_TB_RNAseq$ranked_pert[1:20],
-  CMAP_microarray_aggr = allscores_aggrSig_microarray$CMAP[1:20],
-  CMAP_RNAseq_aggr = allscores_aggrSig_RNAseq$CMAP[1:20],
+  CMap_microarray = CMAP_indivSig_TB_microarray$ranked_pert[1:20],
+  CMap_RNAseq     = CMAP_indivSig_TB_RNAseq$ranked_pert[1:20],
+  CMap_microarray_aggr = allscores_aggrSig_microarray$CMAP[1:20],
+  CMap_RNAseq_aggr = allscores_aggrSig_RNAseq$CMAP[1:20],
 
   Pearson_microarray = Cor_pearson_indivSig_TB_microarray$ranked_pert[1:20],
   Pearson_RNAseq     = Cor_pearson_indivSig_TB_RNAseq$ranked_pert[1:20],
@@ -466,7 +466,7 @@ rank_df_plot <- rank_df %>%
 # set plotting order manually if you want a specific order
 rank_df_plot$Score <- factor(
   as.character(rank_df_plot$Score),
-  levels = rev(c("CMAP", "WCS", "NCS", "Tau", "Pearson", "Spearman", "ReconcileHDT"))
+  levels = rev(c("CMap", "WCS", "NCS", "Tau", "Pearson", "Spearman", "ReconcileHDT"))
 )
 
 # calculate median rank for ReconcileHDT

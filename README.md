@@ -18,7 +18,7 @@ This repository contains the analysis code and processed data for the study:
 ReconcileHDT/
 ├── scripts/         # R and Python analysis scripts (numbered by step)
 ├── vignette/        # Quarto documents with worked examples for each step
-├── evaluation/      # Pubmed scraper and outputs
+├── evaluation/      # PubMed scraper and outputs
 ├── figures/         # Code and outputs for manuscript figures (figure1–6, figureS1-S16)
 ├── data/            # Input data: DE results, signatures, and metadata
 ├── DataCuration/    # Notebooks for preprocessing, cleaning, and harmonizing disease data and metadata
@@ -36,7 +36,7 @@ The analysis follows a six-step pipeline (steps 00–05):
 | ------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | **00** | `00_multids_microarray_DEwithlimma.R`, `00_multids_RNAseq_DEwithDESeq2.R`                                                     | Differential expression analysis across TB datasets                           |
 | **01** | `01_signature_aggregation_functions.R`, `01_signature_landmark_prep_functions.R`                                              | Aggregate DE signatures; filter to L1000 landmark genes                       |
-| **02** | `02_drugrep_get_prediction_indiv.R`, `02_drugrep_get_prediction_aggr.R`, `02_signatureSearch_connectivity_scores_functions.R` | Score drug candidates via CMAP 1.0, CMAP 2.0 (LINCS), and correlation methods |
+| **02** | `02_drugrep_get_prediction_indiv.R`, `02_drugrep_get_prediction_aggr.R`, `02_signatureSearch_connectivity_scores_functions.R` | Score drug candidates via CMap 1.0, CMap 2.0 (LINCS), and correlation methods |
 | **03** | `03_summarize_drugs_methodswise_functions.R`                                                                                  | Summarize and compare predictions across scoring methods                      |
 | **04** | `04_*_RankAggregation_*.R`                                                                                                    | Aggregate drug rankings across methods and datasets                           |
 | **05** | `05_high_confidence_drug_prediction.R`, `05_build_drugtarget_network_functions.R`                                             | Identify high-confidence candidates and build drug–target networks            |
@@ -124,7 +124,7 @@ Drug candidates are prioritized by computing connectivity scores between disease
 
 #### 2.1 Get drug predictions for individual disease signatures
 
-An example command to quantify candidate drugs predicted to reverse RNAseq **individual** TB signatures using the CMAP 2.0 methods (i.e., LINCS).
+An example command to quantify candidate drugs predicted to reverse RNAseq **individual** TB signatures using the CMap 2.0 methods (i.e., LINCS).
 
 ```
 Rscript scripts/02_drugrep_get_prediction_indiv.R \
@@ -138,13 +138,15 @@ Arguments:
 
 - `sig_metadata_path` Path to the RNAseq signature metadata file (default: `data/signatures/RNAseq_TB_signature_run_info.tsv`).
 - `sig_data_path` Directory containing RNAseq signature data files (default: `data/signatures/RNAseq`).
-- `drugdb_name` Drug perturbation database to use. Options: LINCS, CMAP (default: `LINCS`).
+- `drugdb_name` Drug perturbation database to use. Options: `LINCS`, `CMAP` (default: `LINCS`).
 - `score_method` Method used to compute signature similarity scores. Options: `LINCS`, `CMAP`, `Cor_spearman`, `Cor_pearson` (default: `LINCS`).
 - `output_dir` Directory where output results will be saved (default: `results/RNAseq/LINCS`).
 
+**Note:** `CMAP` is the command-line/file-naming token for the CMap 1.0 method (and database). Method and database values are case-insensitive (`CMap` and `CMAP` both work), but outputs are always named with the canonical spelling in output file and folder names (e.g., `results/RNAseq/CMAP/`).
+
 #### 2.2 Get drug predictions for aggregated disease signatures
 
-An example command to quantify candidate drugs predicted to reverse RNAseq **aggregated** TB signatures using the CMAP 2.0 methods (i.e., LINCS).
+An example command to quantify candidate drugs predicted to reverse RNAseq **aggregated** TB signatures using the CMap 2.0 methods (i.e., LINCS).
 
 ```
 Rscript scripts/02_drugrep_get_prediction_aggr.R RNAseq LINCS LINCS

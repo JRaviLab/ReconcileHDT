@@ -403,7 +403,7 @@ heatmap_sig_up_go <- Heatmap( ## add astrisk: final_signi_df_up_variable
     title_gp = gpar(fontsize = 25),
     labels_gp = gpar(fontsize = 25)
   ),
-  column_title = "Individual upregulated \n microarray & RNASeq TB signatures",
+  column_title = "Individual upregulated \n microarray & RNAseq TB signatures",
   column_title_gp = gpar(fontsize = 25),
   row_title = "Enriched GO biological processes",
   row_title_gp = gpar(fontsize = 25),

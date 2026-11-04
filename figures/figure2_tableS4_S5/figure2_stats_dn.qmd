@@ -268,7 +268,7 @@ gtsave(gt_top_bottom_tissue, here("figures/figure2_tableS4_S5/dn_allvals_varianc
 
 ```
 
-```{r microarray vs. RNASeq}
+```{r microarray vs. RNAseq}
 summary_df_tech = summary_df %>% filter(!is.na(signature), !is.na(technology)) %>%
             dplyr::select(signature_name, technology)
 # build group vector

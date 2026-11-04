@@ -17,7 +17,7 @@ rnaseq_dn_aggr_genes = as.character(read_tsv(here("data/signatures/RNAseq/aggreg
 up_aggr_genes = intersect(microarray_up_aggr_genes, rnaseq_up_aggr_genes)
 dn_aggr_genes = intersect(microarray_dn_aggr_genes, rnaseq_dn_aggr_genes)
 
-TB_aggregated_genes = unique(union(up_aggr_genes, dn_aggr_genes)) # same as here("figures/figure4/TB_aggregated_genes.tsv")
+TB_aggregated_genes = unique(union(up_aggr_genes, dn_aggr_genes)) # same as here("figures/figure5/TB_aggregated_genes.tsv")
 ```
 
 ```{r map disease genes to symbols}
@@ -42,7 +42,7 @@ signature_matrix = read_tsv(here("data/drug_data/GSE92742_level5_signatures_lm.t
 
 ```{r read in drug signature metadata}
 library(data.table)
-signature_metadata <- fread(here("data/drug_data/GSE92742_Broad_LINCS_sig_info.txt"))
+signature_metadata <- fread(here("data/metadata/GSE92742_Broad_LINCS_sig_info.txt"))
 ```
 
 ```{r get drug perturbed genes}
@@ -63,7 +63,7 @@ DGIdb_targets_df_$type <- "DGIdb"
 drug_genes_df$type <- "LINCS"
 
 drug_gene_df_network = rbind(drug_genes_df, DGIdb_targets_df_)
-write_tsv(drug_gene_df_network, file=here("figures/figure4/drug_gene_table.tsv"))
+write_tsv(drug_gene_df_network, file=here("figures/figure5/drug_gene_table.tsv"))
 ```
 
 #### Create node_types.txt for figure 3
@@ -83,13 +83,13 @@ type_drug_genes <- "target"
 drug_perturbed_genes_df <- data.frame(node = node_drug_genes, type = type_drug_genes, stringsAsFactors = FALSE)
 
 node_type_df <- rbind(TB_genes_df, drug_perturbed_genes_df)
-write_tsv(node_type_df, file = here("figures/figure4/node_types.tsv"))
+write_tsv(node_type_df, file = here("figures/figure5/node_types.tsv"))
 
 node_drug_genes_wperturbed <- union(drug_genes_df$drug_gene, DGIdb_targets_df$target)
 drug_perturbed_genes_df_wperturbed <- data.frame(node = node_drug_genes_wperturbed, type = type_drug_genes, stringsAsFactors = FALSE)
 
 node_type_df_ <- rbind(TB_genes_df, drug_perturbed_genes_df_wperturbed)
-write_tsv(node_type_df_, file = here("figures/figure4/node_types_with_perturbed_genes.tsv"))
+write_tsv(node_type_df_, file = here("figures/figure5/node_types_with_perturbed_genes.tsv"))
 ```
 
 #### Create and save node/edge data for figure S7

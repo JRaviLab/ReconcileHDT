@@ -353,13 +353,13 @@ get_signi_info <- function(combined_drug_df, signi_drug_df) {
 }
 
 create_drug_method_table <- function(metadata_path, stats = "min", score_percentile = 0.8, percent_reverse = NA, n = 3, values = "neg", tail = "left") {
-  #' @description Build a table of significant drugs from RNA-seq or microarray for a given score with occurrences of reversal across scores
+  #' @description Build a table of significant drugs from RNAseq or microarray for a given score with occurrences of reversal across scores
   #' @param metadata_path path to signature detail table starting at a first-level folder within the project repository
   #' @param stats a string indicating the stats of score to include in the matrix: "median", "min", max".; "min" by default.
   #' @param score_percentile a numeric indicating percentile of choice e.g. 0.75 representing a threshold being the 75th percentile of the flipped score distribution (dist x-axis: positive <---> negative, as negative score preferred for disease-drug reversal)
   #' @param percent_reverse A float in [0,1] indicating the percentage of signatures reversed
   #' @param n An integer: the number of top occurrences to include (ties allowed)
-  #' @returns all_signi_drugs_df: a table of significant drugs from RNA-seq or microarray for a given score with occurrences of reversal across scores
+  #' @returns all_signi_drugs_df: a table of significant drugs from RNAseq or microarray for a given score with occurrences of reversal across scores
 
   scores_list <- list(
     CMAP = "CMAP", WCS = "WCS", NCS = "NCS", Tau = "Tau",
