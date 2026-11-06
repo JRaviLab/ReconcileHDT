@@ -43,7 +43,17 @@ def load_drug_data(path: str, time_filter: str = '24H') -> tuple[pd.DataFrame, p
     drug_data : pd.DataFrame  genes × samples (filtered)
     split_drug : pd.DataFrame  parsed sample metadata
     """
-    raw = pd.read_csv(path, sep='\t', index_col='rid')
+    path = str(path)
+    if path.endswith('.zip'):
+        import zipfile
+        with zipfile.ZipFile(path) as zf:
+            # skip macOS metadata entries (__MACOSX/, ._*)
+            member = next(n for n in zf.namelist()
+                          if not n.startswith('__MACOSX/') and not n.split('/')[-1].startswith('._'))
+            with zf.open(member) as fh:
+                raw = pd.read_csv(fh, sep='\t', index_col='rid')
+    else:
+        raw = pd.read_csv(path, sep='\t', index_col='rid')
 
     split = pd.DataFrame(
         [s.split('_', 4) for s in raw.columns],
@@ -149,7 +159,7 @@ def load_disease_data(
     rna_meta = pd.read_csv(rna_meta_path, sep='\t')
     micro_meta = pd.read_csv(micro_meta_path, sep='\t')
     meta = pd.concat([rna_meta, micro_meta])
-    controls = meta.loc[meta['CLASSIFICATION'] == 'healthy control without treatment', 'geo_accession'].values
+    controls = meta.loc[meta['classification'] == 'healthy control without treatment', 'geo_accession'].values
 
     gene_info = pd.read_csv(gene_info_path, sep='\t', header=0, index_col=0)
     gene_info = gene_info[[g in landmark_genes for g in gene_info['GeneID'].values]]
@@ -165,6 +175,8 @@ def load_disease_data(
         exp['GeneID'] = exp['GeneID'].map(gene_map)
         exp = exp[exp['GeneID'].isin(landmark_genes)]
         exp = exp[exp.columns[exp.columns.isin(np.append(controls, 'GeneID'))]]
+        # skip samples already loaded from another series (e.g. SuperSeries overlap)
+        exp = exp.loc[:, ~exp.columns.isin(dis_data.columns.drop('GeneID'))]
         dis_data = dis_data.merge(exp, how='left', on='GeneID')
     for fname in os.listdir(micro_dir):
         exp = pd.read_csv(
@@ -175,6 +187,8 @@ def load_disease_data(
         exp['GeneID'] = exp['GeneID'].map(gene_map)
         exp = exp[exp['GeneID'].isin(landmark_genes)]
         exp = exp[exp.columns[exp.columns.isin(np.append(controls, 'GeneID'))]]
+        # skip samples already loaded from another series (e.g. SuperSeries overlap)
+        exp = exp.loc[:, ~exp.columns.isin(dis_data.columns.drop('GeneID'))]
         dis_data = dis_data.merge(exp, how='left', on='GeneID')
 
     dis_data = dis_data.set_index('GeneID').astype(float)
@@ -189,8 +203,8 @@ def load_disease_data(
         ranks = np.searchsorted(np.sort(dis_data[col]), dis_data[col])
         dis_qn[col] = target[ranks]
 
-    tissue = meta.set_index('geo_accession').loc[dis_data.columns, 'TISSUE'].fillna('Missing')
-    cell = meta.set_index('geo_accession').loc[dis_data.columns, 'CELL'].fillna('Missing')
+    tissue = meta.set_index('geo_accession').loc[dis_data.columns, 'tissue'].fillna('Missing')
+    cell = meta.set_index('geo_accession').loc[dis_data.columns, 'cell'].fillna('Missing')
 
     return dis_qn.astype(float), tissue, cell
 
