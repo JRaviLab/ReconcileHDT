@@ -10,13 +10,19 @@ source(here("scripts/02_signatureSearch_connectivity_scores_functions.R"))
 args <- commandArgs(TRUE)
 sig_metadata_path <- ifelse(length(args) >= 1, args[1], "data/signatures/RNAseq_TB_signature_run_info.tsv")
 sig_data_path     <- ifelse(length(args) >= 2, args[2], "data/signatures/RNAseq")
-drugdb_name       <- ifelse(length(args) >= 3, args[3], "LINCS") # "LINCS", "CMAP"
-score_method      <- ifelse(length(args) >= 4, args[4], "LINCS") # "LINCS", "CMAP", "Cor_spearman", "Cor_pearson"
-output_dir        <- ifelse(length(args) >= 5, args[5], "results/RNAseq/LINCS")
 
 # accept values case-insensitively (e.g., CMap or CMAP); canonical spelling is used in output file names
-drugdb_name <- match_token(drugdb_name, c("LINCS", "CMAP"))
-score_method <- match_token(score_method, c("LINCS", "CMAP", "Cor_spearman", "Cor_pearson"))
+drugdb_name <- match_token(
+  ifelse(length(args) >= 3, args[3], "LINCS"),
+  c("LINCS", "CMAP")
+)  # "LINCS", "CMAP"
+
+score_method <- match_token(
+  ifelse(length(args) >= 4, args[4], "LINCS"),
+  c("LINCS", "CMAP", "Cor_spearman", "Cor_pearson")
+)  # "LINCS", "CMAP", "Cor_spearman", "Cor_pearson"
+
+output_dir        <- ifelse(length(args) >= 5, args[5], "results/RNAseq/LINCS")
 
 # read in metadata file
 data_to_run <- read.delim(here(sig_metadata_path), sep = "\t")
