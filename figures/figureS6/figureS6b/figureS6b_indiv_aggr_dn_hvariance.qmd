@@ -360,12 +360,16 @@ col_fun <- colorRamp2(
 ha_top <- HeatmapAnnotation(
   technology = meta_df$technology,
   col = list(technology = tech_colors),
+  simple_anno_size = unit(1, "cm"),
   annotation_name_side = "left",
   annotation_name_gp = gpar(fontsize = 25),
   annotation_legend_param = list(
     technology = list(
       title_gp = gpar(fontsize = 25),
-      labels_gp = gpar(fontsize = 25)
+      labels_gp = gpar(fontsize = 25),
+      grid_height = unit(8, "mm"),
+      grid_width = unit(8, "mm"),
+      title_gap = unit(3, "mm")
     )
   )
 )
@@ -380,20 +384,31 @@ ha_bottom <- HeatmapAnnotation(
     origin_type = origin_colors,
     TB_type = tb_colors
   ),
+  simple_anno_size = unit(1, "cm"),
+  gap = unit(2, "mm"),
   annotation_name_side = "left",
   annotation_name_gp = gpar(fontsize = 25),
   annotation_legend_param = list(
     tissue_cell = list(
       title_gp = gpar(fontsize = 25),
-      labels_gp = gpar(fontsize = 25)
+      labels_gp = gpar(fontsize = 25),
+      grid_height = unit(8, "mm"),
+      grid_width = unit(8, "mm"),
+      title_gap = unit(3, "mm")
     ),
     origin_type = list(
       title_gp = gpar(fontsize = 25),
-      labels_gp = gpar(fontsize = 25)
+      labels_gp = gpar(fontsize = 25),
+      grid_height = unit(8, "mm"),
+      grid_width = unit(8, "mm"),
+      title_gap = unit(3, "mm")
     ),
     TB_type = list(
       title_gp = gpar(fontsize = 25),
-      labels_gp = gpar(fontsize = 25)
+      labels_gp = gpar(fontsize = 25),
+      grid_height = unit(8, "mm"),
+      grid_width = unit(8, "mm"),
+      title_gap = unit(3, "mm")
     )
   )
 )
@@ -434,7 +449,10 @@ heatmap_sig_dn_go <- Heatmap(
   heatmap_legend_param = list(
     title = "asinh(observed/expected)",
     title_gp = gpar(fontsize = 25),
-    labels_gp = gpar(fontsize = 25)
+    labels_gp = gpar(fontsize = 25),
+    legend_height = unit(6, "cm"),
+    grid_width = unit(8, "mm"),
+    title_gap = unit(3, "mm")
   ),
   column_title = "Individual downregulated \n microarray & RNAseq TB signatures",
   column_title_gp = gpar(fontsize = 25),
@@ -455,7 +473,9 @@ heatmap_sig_dn_go <- Heatmap(
 
 draw(heatmap_sig_dn_go,
      heatmap_legend_side = "left", 
-     annotation_legend_side = "left")
+     annotation_legend_side = "left",
+     legend_gap = unit(1.5, "cm"),           # space between individual legends
+     padding = unit(c(2, 2, 2, 2), "cm"))    # outer margin (bottom, left, top, right)
 
 dev.off()
 

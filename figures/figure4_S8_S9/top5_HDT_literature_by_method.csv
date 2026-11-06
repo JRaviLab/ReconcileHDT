@@ -1,24 +1,24 @@
 method,rank,drug_name,highest_HDT_evidence,highest_HDT_PMID,n_hdt,n_review
-CMAP_microarray,1,crizotinib,NA,NA,0,1
-CMAP_microarray,2,etoposide,human_subject,33523540,1,1
-CMAP_microarray,3,ingenol,NA,NA,0,0
-CMAP_microarray,4,mycophenolic-acid,NA,NA,0,3
-CMAP_microarray,5,fluspirilene,in_vitro,34608194,1,0
-CMAP_RNAseq,1,vemurafenib,NA,NA,0,1
-CMAP_RNAseq,2,temsirolimus,NA,NA,0,0
-CMAP_RNAseq,3,fostamatinib,NA,NA,0,1
-CMAP_RNAseq,4,perphenazine,NA,NA,0,0
-CMAP_RNAseq,5,vorinostat,in_vitro,29501835,1,1
-CMAP_microarray_aggr,1,perphenazine,NA,NA,0,0
-CMAP_microarray_aggr,2,mycophenolic-acid,NA,NA,0,3
-CMAP_microarray_aggr,3,ingenol,NA,NA,0,0
-CMAP_microarray_aggr,4,vorinostat,in_vitro,29501835,1,1
-CMAP_microarray_aggr,5,cortisone,NA,NA,0,8
-CMAP_RNAseq_aggr,1,ethinyl-estradiol,NA,NA,0,2
-CMAP_RNAseq_aggr,2,fostamatinib,NA,NA,0,1
-CMAP_RNAseq_aggr,3,rosuvastatin,clinical_study,36966799,1,1
-CMAP_RNAseq_aggr,4,dasatinib,animal,40631209; 42098153,2,2
-CMAP_RNAseq_aggr,5,fluvastatin,animal,31605489; 38534380,4,1
+CMap_microarray,1,crizotinib,NA,NA,0,1
+CMap_microarray,2,etoposide,human_subject,33523540,1,1
+CMap_microarray,3,ingenol,NA,NA,0,0
+CMap_microarray,4,mycophenolic-acid,NA,NA,0,3
+CMap_microarray,5,fluspirilene,in_vitro,34608194,1,0
+CMap_RNAseq,1,vemurafenib,NA,NA,0,1
+CMap_RNAseq,2,temsirolimus,NA,NA,0,0
+CMap_RNAseq,3,fostamatinib,NA,NA,0,1
+CMap_RNAseq,4,perphenazine,NA,NA,0,0
+CMap_RNAseq,5,vorinostat,in_vitro,29501835,1,1
+CMap_microarray_aggr,1,perphenazine,NA,NA,0,0
+CMap_microarray_aggr,2,mycophenolic-acid,NA,NA,0,3
+CMap_microarray_aggr,3,ingenol,NA,NA,0,0
+CMap_microarray_aggr,4,vorinostat,in_vitro,29501835,1,1
+CMap_microarray_aggr,5,cortisone,NA,NA,0,8
+CMap_RNAseq_aggr,1,ethinyl-estradiol,NA,NA,0,2
+CMap_RNAseq_aggr,2,fostamatinib,NA,NA,0,1
+CMap_RNAseq_aggr,3,rosuvastatin,clinical_study,36966799,1,1
+CMap_RNAseq_aggr,4,dasatinib,animal,40631209; 42098153,2,2
+CMap_RNAseq_aggr,5,fluvastatin,animal,31605489; 38534380,4,1
 Pearson_microarray,1,valsartan,NA,NA,0,0
 Pearson_microarray,2,flunarizine,other,34533236,1,0
 Pearson_microarray,3,clofibric-acid,NA,NA,0,0
@@ -119,8 +119,8 @@ WCS_RNAseq_aggr,2,atorvastatin,animal,31605489,3,1
 WCS_RNAseq_aggr,3,tofacitinib,animal,26425676; 26425693,2,25
 WCS_RNAseq_aggr,4,fluvastatin,animal,31605489; 38534380,4,1
 WCS_RNAseq_aggr,5,ethinyl-estradiol,NA,NA,0,2
-Integrative,1,rosuvastatin,clinical_study,36966799,1,1
-Integrative,2,fostamatinib,NA,NA,0,1
-Integrative,3,fluvastatin,animal,31605489; 38534380,4,1
-Integrative,4,tofacitinib,animal,26425676; 26425693,2,25
-Integrative,5,lovastatin,animal,39832798,2,0
+ReconcileHDT,1,rosuvastatin,clinical_study,36966799,1,1
+ReconcileHDT,2,fostamatinib,NA,NA,0,1
+ReconcileHDT,3,fluvastatin,animal,31605489; 38534380,4,1
+ReconcileHDT,4,tofacitinib,animal,26425676; 26425693,2,25
+ReconcileHDT,5,lovastatin,animal,39832798,2,0
