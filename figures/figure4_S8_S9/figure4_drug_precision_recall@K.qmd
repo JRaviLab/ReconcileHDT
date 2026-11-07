@@ -12,6 +12,13 @@ library(ggplot2)
 library(RColorBrewer)
 library(tidyr)
 library(purrr)
+
+select    <- dplyr::select
+first     <- dplyr::first
+desc      <- dplyr::desc
+count     <- dplyr::count
+intersect <- dplyr::intersect
+setdiff   <- dplyr::setdiff
 ```
 
 ```{r read in HDT positive labels}
