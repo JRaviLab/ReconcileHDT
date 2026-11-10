@@ -658,6 +658,65 @@ ggplot(results_df_plot, aes(x = K, y = Precision, group = Method)) +
 dev.off()
 ```
 
+```{r summary stats table}
+# ReconcileHDT vs. the range of all other methods, per K and metric
+# (results_df has one row per Method x K; results_df_plot duplicates ReconcileHDT across facets)
+
+table_SX <- results_df %>%
+  pivot_longer(c(Precision, Recall), names_to = "Metric", values_to = "Value") %>%
+  group_by(K, Metric) %>%
+  summarise(
+    ReconcileHDT = Value[IsReconcileHDT][1],
+    Minimum = min(Value[!IsReconcileHDT]),
+    Median = median(Value[!IsReconcileHDT]),
+    Maximum = max(Value[!IsReconcileHDT]),
+    Best_condition = paste(Method[!IsReconcileHDT & Value == Maximum], collapse = "; "),
+    .groups = "drop"
+  ) %>%
+  arrange(K, factor(Metric, levels = c("Precision", "Recall"))) %>%
+  mutate(across(c(ReconcileHDT, Minimum, Median, Maximum), ~ round(.x, 3)))
+
+table_SX
+
+write_csv(table_SX, here("figures/figure4_S8_S9/",
+  paste0("tableSX_precision_recall@K_summary_", LABEL_DEF, ".csv")))
+
+# save as pdf with GT
+table_SX_gt <- table_SX %>%
+  mutate(
+    Metric = paste0(Metric, "@", K),
+    # stack ties
+    Best_condition = gsub("; ", "<br>", Best_condition)
+  ) %>%
+  dplyr::select(-K) %>%
+  gt::gt() %>%
+  gt::tab_header(
+    title = "ReconcileHDT vs. other methods: precision and recall @K",
+    subtitle = LABEL_SUBTITLE
+  ) %>%
+  gt::tab_spanner(label = "Other methods", columns = c(Minimum, Median, Maximum, Best_condition)) %>%
+  gt::cols_label(Best_condition = "Best condition") %>%
+  gt::fmt_number(columns = c(ReconcileHDT, Minimum, Median, Maximum), decimals = 3) %>%
+  gt::fmt_markdown(columns = Best_condition) %>%
+  gt::cols_align(align = "left", columns = c(Metric, Best_condition)) %>%
+  gt::tab_style(
+    style = gt::cell_text(weight = "bold"),
+    locations = gt::cells_body(columns = ReconcileHDT)
+  ) %>%
+  gt::tab_options(table.font.size = gt::px(13))
+
+table_SX_gt
+
+table_SX_pdf <- here("figures/figure4_S8_S9/",
+  paste0("tableSX_precision_recall@K_summary_", LABEL_DEF, ".pdf"))
+gt::gtsave(table_SX_gt, table_SX_pdf)
+
+if (nzchar(Sys.which("pdfcrop"))) {
+  system2("pdfcrop", c("--margins", "10", shQuote(table_SX_pdf), shQuote(table_SX_pdf)),
+          stdout = FALSE, stderr = FALSE)
+}
+```
+
 ```{r plot ReconcileHDT precision @K against average precision @K across technologies of other methods}
 # ensure signature_type exists
 results_df <- results_df %>%
