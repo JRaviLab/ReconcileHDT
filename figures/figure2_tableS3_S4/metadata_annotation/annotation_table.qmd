@@ -60,6 +60,6 @@ sorted_annotation_table$dataset_signature_ID <- paste(
   sep = "_"
 )
 
-write_tsv(sorted_annotation_table, file = here("figures/figure2_tableS4_S5/metadata_annotation/annotation_table.tsv"))
+write_tsv(sorted_annotation_table, file = here("figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv"))
 
 ```
