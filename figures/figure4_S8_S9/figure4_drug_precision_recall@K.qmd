@@ -679,7 +679,7 @@ table_SX <- results_df %>%
 table_SX
 
 write_csv(table_SX, here("figures/figure4_S8_S9/",
-  paste0("tableSX_precision_recall@K_summary_", LABEL_DEF, ".csv")))
+  paste0("tableS9_precision_recall@K_summary_", LABEL_DEF, ".csv")))
 
 # save as pdf with GT
 table_SX_gt <- table_SX %>%
@@ -708,7 +708,7 @@ table_SX_gt <- table_SX %>%
 table_SX_gt
 
 table_SX_pdf <- here("figures/figure4_S8_S9/",
-  paste0("tableSX_precision_recall@K_summary_", LABEL_DEF, ".pdf"))
+  paste0("tableS9_precision_recall@K_summary_", LABEL_DEF, ".pdf"))
 gt::gtsave(table_SX_gt, table_SX_pdf)
 
 if (nzchar(Sys.which("pdfcrop"))) {
