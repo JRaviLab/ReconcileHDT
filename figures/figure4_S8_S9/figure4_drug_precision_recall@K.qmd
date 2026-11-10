@@ -670,10 +670,10 @@ results_df <- results_df %>%
     Score = gsub("_.*", "", Method)
   )
 
-# compute average Precision@K by Score, signature_type, and K
+# compute median Precision@K by Score, signature_type, and K
 avg_df <- results_df %>%
   group_by(Score, signature_type, K) %>%
-  summarise(AveragePrecision = mean(Precision, na.rm = TRUE), .groups = "drop")
+  summarise(AveragePrecision = median(Precision, na.rm = TRUE), .groups = "drop")
 
 score_colors <- c(
   "ReconcileHDT" = "black",
@@ -682,7 +682,7 @@ score_colors <- c(
 )
 
 pdf(here("figures/figure4_S8_S9/",
-  paste0("figure4c_average_precision@K_technology_signature_", LABEL_DEF, ".pdf")),
+  paste0("figure4c_median_precision@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 6)
 
 ggplot(avg_df, aes(x = K, y = AveragePrecision, color = Score)) +
@@ -702,10 +702,10 @@ ggplot(avg_df, aes(x = K, y = AveragePrecision, color = Score)) +
   scale_alpha_identity() +   
   theme_minimal(base_size = 16) +
   labs(
-    title = "Average precision@K across microarray and RNAseq",
+    title = "Median precision@K across microarray and RNAseq",
     subtitle = LABEL_SUBTITLE,
     x = "K",
-    y = "Average precision",
+    y = "Median precision",
     color = "Score",
     linetype = "Signature type"
   ) +
@@ -823,10 +823,10 @@ results_df <- results_df %>%
     Score = gsub("_.*", "", Method)
   )
 
-# compute average Precision@K by Score, signature_type, and K
+# compute median Recall@K by Score, signature_type, and K
 avg_df_recall <- results_df %>%
   group_by(Score, signature_type, K) %>%
-  summarise(AverageRecall = mean(Recall, na.rm = TRUE), .groups = "drop")
+  summarise(AverageRecall = median(Recall, na.rm = TRUE), .groups = "drop")
 
 score_colors <- c(
   "ReconcileHDT" = "black",
@@ -835,7 +835,7 @@ score_colors <- c(
 )
 
 pdf(here("figures/figure4_S8_S9/",
-  paste0("figure4d_average_recall@K_technology_signature_", LABEL_DEF, ".pdf")),
+  paste0("figure4d_median_recall@K_technology_signature_", LABEL_DEF, ".pdf")),
     width = 10, height = 6)
 
 ggplot(avg_df_recall, aes(x = K, y = AverageRecall, color = Score)) +
@@ -855,10 +855,10 @@ ggplot(avg_df_recall, aes(x = K, y = AverageRecall, color = Score)) +
   scale_alpha_identity() +   
   theme_minimal(base_size = 16) +
   labs(
-    title = "Average recall@K across microarray and RNAseq",
+    title = "Median recall@K across microarray and RNAseq",
     subtitle = LABEL_SUBTITLE,
     x = "K",
-    y = "Average recall",
+    y = "Median recall",
     color = "Score",
     linetype = "Signature type"
   ) +
