@@ -211,7 +211,7 @@ tissue_MW_results$norm_auroc <- (2 * tissue_MW_results$auroc) - 1
 ```
 
 ```{r}
-write_tsv(tissue_MW_results, here("figures/figure2_tableS4_S5/up_allvals_circulating_other_MW.tsv"))
+write_tsv(tissue_MW_results, here("figures/figure2_tableS3_S4/up_allvals_circulating_other_MW.tsv"))
 ```
 
 ```{r differentiating terms in gt format}
@@ -262,11 +262,11 @@ gt_top_bottom_tissue <- top_combined_df_tissue %>%
   ) %>%
   fmt_scientific(columns = c(median_diff, p_value, p_adj))
 
-gtsave(gt_top_bottom_tissue, here("figures/figure2_tableS4_S5/up_allvals_variance_circulating_other_signiGO_terms.html"))
+gtsave(gt_top_bottom_tissue, here("figures/figure2_tableS3_S4/up_allvals_variance_circulating_other_signiGO_terms.html"))
 
 ```
 
-```{r microarray vs. RNASeq}
+```{r microarray vs. RNAseq}
 summary_df_tech = summary_df %>% filter(!is.na(signature), !is.na(technology)) %>%
             dplyr::select(signature_name, technology)
 # build group vector
@@ -318,7 +318,7 @@ technology_MW_results$norm_auroc <- (2 * technology_MW_results$auroc) - 1
 ```
 
 ```{r}
-write_tsv(technology_MW_results, here("figures/figure2_tableS4_S5/up_allvals_microarray_rnaseq_MW.tsv"))
+write_tsv(technology_MW_results, here("figures/figure2_tableS3_S4/up_allvals_microarray_rnaseq_MW.tsv"))
 ```
 
 ```{r}
@@ -368,7 +368,7 @@ gt_top_bottom_tech <- top_combined_df_microarray_rnaseq %>%
   fmt_scientific(columns = c(median_diff, p_value, p_adj))
 
 # Display combined table
-gtsave(gt_top_bottom_tech, here("figures/figure2_tableS4_S5/up_allvals_variance_microarray_rnaseq_signiGO_terms.html"))
+gtsave(gt_top_bottom_tech, here("figures/figure2_tableS3_S4/up_allvals_variance_microarray_rnaseq_signiGO_terms.html"))
 ```
 
 ```{r cell line vs. primary}
@@ -420,7 +420,7 @@ origin_MW_results$norm_auroc <- (2 * origin_MW_results$auroc) - 1
 ```
 
 ```{r}
-write_tsv(origin_MW_results, here("figures/figure2_tableS4_S5/up_allvals_primary_cellline_MW.tsv"))
+write_tsv(origin_MW_results, here("figures/figure2_tableS3_S4/up_allvals_primary_cellline_MW.tsv"))
 ```
 
 ```{r}
@@ -469,5 +469,5 @@ gt_top_bottom_origin <- top_combined_df_microarray_rnaseq %>%
   ) %>%
   fmt_scientific(columns = c(median_diff, p_value, p_adj))
 
-gtsave(gt_top_bottom_origin, here("figures/figure2_tableS4_S5/up_allvals_variance_primary_cellline_signiGO_terms.html"))
+gtsave(gt_top_bottom_origin, here("figures/figure2_tableS3_S4/up_allvals_variance_primary_cellline_signiGO_terms.html"))
 ```

@@ -1,0 +1,16 @@
+# Baseline comparison (Figures S13-S16)
+# Python: 3.10
+# Direct dependencies for suppl_baseline_comparison.ipynb and suppl_baseline_functions.py
+numpy
+pandas
+scipy
+matplotlib
+scikit-learn
+rbo
+ipykernel
+
+# Required to regenerate the LINCS Level 3 data using
+# scripts/suppl_baseline_get_drugdata_lincslevel3.py
+cmapPy
+h5py
+

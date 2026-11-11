@@ -1,24 +1,24 @@
-# Integrative transcriptome-based drug repurposing in tuberculosis
+# ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This repository contains the analysis code and processed data for the study:
 
-> Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A\*, Ravi J\*. _Integrative transcriptome-based drug repurposing in tuberculosis._ bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
+> Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A\*, Ravi J\*. _ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis._ bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
 >
 > \* co-corresponding authors
 
-We integrate transcriptomic signatures from multiple TB microarray and RNAseq datasets with various disease-drug connectivity scores to identify and prioritize HDT candidates for tuberculosis.
+**ReconcileHDT** integrates transcriptomic signatures from multiple TB microarray and RNAseq datasets with various disease-drug connectivity scores to identify and prioritize host-directed therapy (HDT) candidates for tuberculosis.
 
 ---
 
 ## Repository structure
 
 ```
-integrative-drugrep-tb/
+ReconcileHDT/
 ├── scripts/         # R and Python analysis scripts (numbered by step)
 ├── vignette/        # Quarto documents with worked examples for each step
-├── evaluation/      # Pubmed scraper and outputs
+├── evaluation/      # PubMed scraper and outputs
 ├── figures/         # Code and outputs for manuscript figures (figure1–6, figureS1-S16)
 ├── data/            # Input data: DE results, signatures, and metadata
 ├── DataCuration/    # Notebooks for preprocessing, cleaning, and harmonizing disease data and metadata
@@ -30,13 +30,13 @@ integrative-drugrep-tb/
 
 ## Workflow
 
-The analysis follows a five-step pipeline:
+The analysis follows a six-step pipeline (steps 00–05):
 
 | Step   | Scripts                                                                                                                       | Description                                                                   |
 | ------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | **00** | `00_multids_microarray_DEwithlimma.R`, `00_multids_RNAseq_DEwithDESeq2.R`                                                     | Differential expression analysis across TB datasets                           |
 | **01** | `01_signature_aggregation_functions.R`, `01_signature_landmark_prep_functions.R`                                              | Aggregate DE signatures; filter to L1000 landmark genes                       |
-| **02** | `02_drugrep_get_prediction_indiv.R`, `02_drugrep_get_prediction_aggr.R`, `02_signatureSearch_connectivity_scores_functions.R` | Score drug candidates via CMAP 1.0, CMAP 2.0 (LINCS), and correlation methods |
+| **02** | `02_drugrep_get_prediction_indiv.R`, `02_drugrep_get_prediction_aggr.R`, `02_signatureSearch_connectivity_scores_functions.R` | Score drug candidates via CMap 1.0, CMap 2.0 (LINCS), and correlation methods |
 | **03** | `03_summarize_drugs_methodswise_functions.R`                                                                                  | Summarize and compare predictions across scoring methods                      |
 | **04** | `04_*_RankAggregation_*.R`                                                                                                    | Aggregate drug rankings across methods and datasets                           |
 | **05** | `05_high_confidence_drug_prediction.R`, `05_build_drugtarget_network_functions.R`                                             | Identify high-confidence candidates and build drug–target networks            |
@@ -49,8 +49,10 @@ See [`scripts/README.md`](scripts/README.md) for a full table of scripts and the
 
 ### Requirements
 
-- R 4.6.1 with Bioconductor 3.23
-- Python 3 (for [HDT literature evidence retreival](https://github.com/JRaviLab/integrative-drugrep-tb/tree/main/evaluation) and [baseline analysis](https://github.com/JRaviLab/integrative-drugrep-tb/tree/main/figures/figureS13_S14_S15_S16) 
+- R 4.6.1 with Bioconductor 3.23 (R packages are pinned in `renv.lock`; see Setup below)
+- [Quarto](https://quarto.org/docs/get-started/) CLI, to render the `.qmd` notebooks in `vignette/` and `figures/` (bundled with RStudio and Positron; make sure `quarto` is on your `PATH` to render from the terminal)
+- Python 3, for [HDT literature evidence retrieval](https://github.com/JRaviLab/ReconcileHDT/tree/main/evaluation), the [baseline analysis](https://github.com/JRaviLab/ReconcileHDT/tree/main/figures/figureS13_S14_S15_S16), and the notebooks in `DataCuration/`. Packages imported by these scripts: `numpy`, `pandas`, `scipy`, `scikit-learn`, `matplotlib`, `seaborn`, `plotly`, `networkx`, `joblib`, `tqdm`, `biopython`, `rbo`, and `cmapPy` (no pinned Python environment is provided yet)
+- NCBI credentials (email and API key) in a config file, for `evaluation/DrugLitSearch.py`
 
 ### Setup
 
@@ -90,7 +92,7 @@ Arguments:
 #### 1.2 RNAseq individual disease signatures
 
 ```
-Rscript scripts/00_multids_RNAseq_DESeq2.R \
+Rscript scripts/00_multids_RNAseq_DEwithDESeq2.R \
   data/RNAseq_data_forDE/clean_TB_sample_metadata_classification.tsv \
   0.05
 ```
@@ -122,11 +124,11 @@ Drug candidates are prioritized by computing connectivity scores between disease
 
 #### 2.1 Get drug predictions for individual disease signatures
 
-An example command to quantify candidate drugs predicted to reverse RNAseq **individual** TB signatures using the CMAP 2.0 methods (i.e., LINCS).
+An example command to quantify candidate drugs predicted to reverse RNAseq **individual** TB signatures using the CMap 2.0 methods (i.e., LINCS).
 
 ```
 Rscript scripts/02_drugrep_get_prediction_indiv.R \
-  data/signatures/RNASeq_TB_signature_run_info.tsv \
+  data/signatures/RNAseq_TB_signature_run_info.tsv \
   data/signatures/RNAseq \
   LINCS LINCS \
   results/RNAseq/LINCS
@@ -134,15 +136,17 @@ Rscript scripts/02_drugrep_get_prediction_indiv.R \
 
 Arguments:
 
-- `sig_metadata_path` Path to the RNAseq signature metadata file (default: `data/signatures/RNASeq_TB_signature_run_info.tsv`).
+- `sig_metadata_path` Path to the RNAseq signature metadata file (default: `data/signatures/RNAseq_TB_signature_run_info.tsv`).
 - `sig_data_path` Directory containing RNAseq signature data files (default: `data/signatures/RNAseq`).
-- `drugdb_name` Drug perturbation database to use. Options: LINCS, CMAP (default: `LINCS`).
+- `drugdb_name` Drug perturbation database to use. Options: `LINCS`, `CMAP` (default: `LINCS`).
 - `score_method` Method used to compute signature similarity scores. Options: `LINCS`, `CMAP`, `Cor_spearman`, `Cor_pearson` (default: `LINCS`).
 - `output_dir` Directory where output results will be saved (default: `results/RNAseq/LINCS`).
 
+**Note:** `CMAP` is the command-line/file-naming token for the CMap 1.0 method (and database). Method and database values are case-insensitive (`CMap` and `CMAP` both work), but outputs are always named with the canonical spelling in output file and folder names (e.g., `results/RNAseq/CMAP/`).
+
 #### 2.2 Get drug predictions for aggregated disease signatures
 
-An example command to quantify candidate drugs predicted to reverse RNAseq **aggregated** TB signatures using the CMAP 2.0 methods (i.e., LINCS).
+An example command to quantify candidate drugs predicted to reverse RNAseq **aggregated** TB signatures using the CMap 2.0 methods (i.e., LINCS).
 
 ```
 Rscript scripts/02_drugrep_get_prediction_aggr.R RNAseq LINCS LINCS
@@ -150,7 +154,7 @@ Rscript scripts/02_drugrep_get_prediction_aggr.R RNAseq LINCS LINCS
 
 Arguments:
 
-- `technology` Type of transcriptomic data used to generate aggregated signatures. Options: `microarray` or `RNAseq` (default: `RNASeq`)
+- `technology` Type of transcriptomic data used to generate aggregated signatures. Options: `microarray` or `RNAseq` (default: `RNAseq`)
 - `score_method` Method used to compute disease-drug connectivity scores. Options: `LINCS`, `CMAP`, `Cor_spearman`, `Cor_pearson` (default: `LINCS`).
 - `drugdb_name` Drug perturbation database to use for querying signatures. Options: `LINCS`, `CMAP` (default: `LINCS`).
 
@@ -184,7 +188,7 @@ vignette/05_high_confidence_drug_prediction.qmd
 
 **NOTES:**
 
-- Additional downstream analyses (e.g., pathway and baseline analyses) can be reproduced using the .qmd notebooks provided in the `vignettes/` directory.
+- Additional downstream analyses (e.g., pathway and baseline analyses) can be reproduced using the .qmd notebooks provided in the `vignette/` directory.
 - All figures can be reproduced using the .qmd notebooks provided in the `figures/` directory.
 
 ---
@@ -195,7 +199,7 @@ If you use this code or data, please cite:
 
 ```
 Samart K, Thang L, Buskirk L, Tonielli A, Krishnan A*, Ravi J*.
-Integrative transcriptome-based drug repurposing in tuberculosis.
+ReconcileHDT: an integrative framework for transcriptome-based drug repurposing of host-directed therapeutics in tuberculosis.
 bioRxiv (2025). https://doi.org/10.1101/2025.06.02.657296
 (* co-corresponding authors)
 ```

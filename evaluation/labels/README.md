@@ -19,7 +19,7 @@
 ### Terminal session
 
 ```{zsh}
-(.venv) ➜  integrative-drugrep-tb git:(evidence_label) ✗ python3 evaluation/DrugLitSearch.py evaluation/launched_drugs.tsv drug_name \
+(.venv) ➜  ReconcileHDT git:(evidence_label) ✗ python3 evaluation/DrugLitSearch.py evaluation/launched_drugs.tsv drug_name \
   --article \
   --refresh \
   --verbose \

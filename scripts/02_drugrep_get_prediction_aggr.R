@@ -14,9 +14,21 @@ source(here("scripts/02_signatureSearch_connectivity_scores_functions.R"))
 # set up arguments (defaults to RNAseq/LINCS if not specified)
 args <- commandArgs(TRUE)
 
-tech <- ifelse(length(args) >= 1, args[1], "RNAseq")
-score_method <- ifelse(length(args) >= 2, args[2], "LINCS")
-db_name <- ifelse(length(args) >= 3, args[3], "LINCS")
+# accept values case-insensitively (e.g., CMap or CMAP); canonical spelling is used in output paths
+tech <- match_token(
+  ifelse(length(args) >= 1, args[1], "RNAseq"),
+  c("microarray", "RNAseq")
+)
+
+score_method <- match_token(
+  ifelse(length(args) >= 2, args[2], "LINCS"),
+  c("LINCS", "CMAP", "Cor_spearman", "Cor_pearson")
+)
+
+db_name <- match_token(
+  ifelse(length(args) >= 3, args[3], "LINCS"),
+  c("LINCS", "CMAP")
+)
 
 print(paste0("Technology: ", tech))
 print(paste0("Method: ", score_method))

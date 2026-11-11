@@ -5,9 +5,10 @@ The folder structure is organized to separate expression datasets, differential 
 ```
 .
 ├── DE_results/                # Differential expression results
-├── RNAseq_data_forDE/         # Processed RNA-seq datasets used for DE analysis
-├── RNAseq_pathways/           # Pathway analysis results for RNA-seq datasets
+├── RNAseq_data_forDE/         # Processed RNAseq datasets used for DE analysis
+├── RNAseq_pathways/           # Pathway analysis results for RNAseq datasets
 ├── baseline_analysis/         # Baseline drug-control comparison analysis
+├── labeling/                  # Sample inclusion/exclusion curation tables
 ├── metadata/                  # Dataset metadata and annotations
 ├── microarray_data_forDE/     # Processed microarray datasets used for DE analysis
 ├── microarray_pathways/       # Pathway analysis results for microarray datasets
@@ -16,7 +17,7 @@ The folder structure is organized to separate expression datasets, differential 
 ```
 ## Disease data
 Details of disease data can be found in `DataCuration/`.  
-The summary of disease signatures used in this study is provided in [**Table S1**](https://github.com/JRaviLab/integrative-drugrep-tb/blob/main/figures/tableS1/tableS1_signature_summary_table.pdf).
+The summary of disease signatures used in this study is provided in [**Table S1**](https://github.com/JRaviLab/ReconcileHDT/blob/main/figures/tableS1/tableS1_signature_summary_table.pdf).
 
 ### Microarray signatures
 
@@ -32,7 +33,7 @@ The summary of disease signatures used in this study is provided in [**Table S1*
 
 ---
 
-### RNA-seq signatures
+### RNAseq signatures
 
 | No. | ID | Signature name | TB status | Tissue origin | Cell type | Origin type | Dataset type | Upregulated genes | Downregulated genes | Control samples | Disease samples |
 |-----|----|---------------|----------|--------------|----------|-------------|--------------|------------------|--------------------|----------------|----------------|

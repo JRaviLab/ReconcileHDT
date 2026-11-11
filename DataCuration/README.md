@@ -1,10 +1,10 @@
-# TB data curations documentation
+# TB data curation documentation
 
 Preprocessed transcriptomic datasets were retrieved from ARCHS4 and their respective metadata from Gene Expression Omnibus (GEO) databases, followed by rigorous data curation, preprocessing, and differential expression analysis to identify disease signatures.
 
 ## Data curation and preprocessing
 
-### [Stage1.0_getDiseases-ling.ipynb](Stage1.0_getDiseases-ling.ipynb)
+### [Stage1.0_getDiseases.ipynb](Stage1.0_getDiseases.ipynb)
 
 Querying ARCHS4 for disease-specific transcriptomic datasets and retrieving metadata from GEO.
 
@@ -15,7 +15,7 @@ Querying ARCHS4 for disease-specific transcriptomic datasets and retrieving meta
 - querying Gene Expression Omnibus (GEO) for the metadata,
   - see [get_metadata_GEO.R](get_metadata_GEO.R) and [get_expression_data_ARCHS4.R](get_expression_data_ARCHS4.R) for retrieval script
 - manually identifying relevant samples for the differential expression analysis,
-  - see [data/labeling/TB_curationdoc.tsv](https://github.com/JRaviLab/integrative-drugrep-tb/blob/main/data/labeling/TB_curationdoc.tsv) for specific details of justification for inclusion/exclusion of samples
+  - see [data/labeling/TB_curation.tsv](https://github.com/JRaviLab/ReconcileHDT/blob/main/data/labeling/TB_curation.tsv) for specific details of justification for inclusion/exclusion of samples
 
 ### [Stage1.1_CheckLabeling.ipynb](Stage1.1_CheckLabeling.ipynb)
 
@@ -26,7 +26,7 @@ Verifying the accuracy of manual labeling of samples based on metadata and curat
 ### [Stage1.2_cleanup_expression_data.ipynb](Stage1.2_cleanup_expression_data.ipynb)
 
 - please unzip the microarray raw expression files 1 and 2 and place them in a folder named `microarray_data_forDE/rawexpression`
-- Ensures that the samples in the GEO metadata are present in the Archs4 expression data
+- Ensures that the samples in the GEO metadata are present in the ARCHS4 expression data
 
 ### [Stage1.3_CriteriaCheck.ipynb](Stage1.3_CriteriaCheck.ipynb)
 

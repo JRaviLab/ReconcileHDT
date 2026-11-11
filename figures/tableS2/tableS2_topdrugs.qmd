@@ -36,7 +36,7 @@ library(tidyverse)
 library(gt)
 library(stringr)
 
-# Combine microarray and RNA-seq results by union of drugs
+# Combine microarray and RNAseq results by union of drugs
 combined_scores_df <- full_join(all_scores_marray_df, all_scores_rnaseq_df, by = "significant_drug")
 
 # now safely apply replace_na() on all columns except unique_pert
@@ -90,15 +90,15 @@ final_gt_table <- final_table_df %>%
   ) %>%
 
   # Spanners with unique IDs
-  tab_spanner(label = "CMAP1.0", columns = c(MA_CMAP), id = "ma_cmap1.0") %>%
-  tab_spanner(label = "CMAP2.0", columns = c(MA_NCS, MA_Tau, MA_WCS), id = "ma_cmap2.0") %>%
+  tab_spanner(label = "CMap 1.0", columns = c(MA_CMAP), id = "ma_cmap1.0") %>%
+  tab_spanner(label = "CMap 2.0", columns = c(MA_NCS, MA_Tau, MA_WCS), id = "ma_cmap2.0") %>%
   tab_spanner(label = "Correlation", columns = c(MA_Cor_pearson, MA_Cor_spearman), id = "ma_corr") %>%
   tab_spanner(label = "Enrichment-based", columns = c(MA_CMAP, MA_NCS, MA_Tau, MA_WCS), id = "ma_enrich") %>%
   tab_spanner(label = "Correlation-based", columns = c(MA_Cor_pearson, MA_Cor_spearman), id = "ma_correlation") %>%
   tab_spanner(label = "Microarray (6 signatures)", columns = starts_with("MA_"), id = "ma_main") %>%
   
-  tab_spanner(label = "CMAP1.0", columns = c(RS_CMAP), id = "rs_cmap1.0") %>%
-  tab_spanner(label = "CMAP2.0", columns = c(RS_NCS, RS_Tau, RS_WCS), id = "rs_cmap2.0") %>%
+  tab_spanner(label = "CMap 1.0", columns = c(RS_CMAP), id = "rs_cmap1.0") %>%
+  tab_spanner(label = "CMap 2.0", columns = c(RS_NCS, RS_Tau, RS_WCS), id = "rs_cmap2.0") %>%
   tab_spanner(label = "Correlation", columns = c(RS_Cor_pearson, RS_Cor_spearman), id = "rs_corr") %>%
   tab_spanner(label = "Enrichment-based", columns = c(RS_CMAP, RS_NCS, RS_Tau, RS_WCS), id = "rs_enrich") %>%
   tab_spanner(label = "Correlation-based", columns = c(RS_Cor_pearson, RS_Cor_spearman), id = "rs_correlation") %>%
