@@ -10,55 +10,92 @@ annotation_table = read_tsv(here("data/signatures/202506_TB_signatures_info.tsv"
 ```
 
 ```{r}
-sorted_annotation_table <- annotation_table %>%
+# cols to drop if the input already has them
+id_cols <- c("signature_ID", "number", "dataset_ID", "dataset_signature_ID")
+is_aggregated <- function(x) grepl("aggregated_signature$", x)
+
+# previously assigned IDs (if present) -- used only to check the result is stable
+previous_ids <- if ("dataset_signature_ID" %in% names(annotation_table)) {
+  setNames(annotation_table$dataset_signature_ID, annotation_table$signature_name)
+} else NULL
+
+individual_signatures <- annotation_table %>%
+  select(-any_of(id_cols)) %>%
+  filter(!is_aggregated(signature_name))
+
+# sort individual signatures
+sorted_annotation_table <- individual_signatures %>%
   arrange(
     desc(technology),
     tissue_category,
     sample_origin,
     tissue_cell_type,
     series_id,
-    tb_status,
+    factor(tb_status, levels = c("PTB", "EPTB", "LNTB", "MTB")), # KEEP AS IS requires order for ID assignment
     desc(disease_samples),
-    desc(control_samples)
+    desc(control_samples),
+    signature_name
   )
 
-extra_rows <- tibble::tibble(
-  series_id        = c(NA_character_, NA_character_),
-  signature_name   = c("microarray_aggregated_signature",
-                       "RNAseq_aggregated_signature"),
-  tb_status        = c(NA_character_, NA_character_),
-  tissue_category  = c(NA_character_, NA_character_),
-  tissue_cell_type = c(NA_character_, NA_character_),
-  sample_origin    = c(NA_character_, NA_character_),
-  exprmat_path     = c(NA_character_, NA_character_),
-  signature        = c(1, 1),
-  up_genes_num     = c(98, 98),
-  dn_genes_num     = c(98, 98),
-  control_samples  = c(NA_integer_, NA_integer_),
-  disease_samples  = c(NA_integer_, NA_integer_),
-  technology       = c("microarray", "RNAseq")
-)
+# append aggregated LAST (figure S6 relies on this)
+aggregated_signatures <- annotation_table %>%
+  select(-any_of(id_cols)) %>%
+  filter(is_aggregated(signature_name))
 
-sorted_annotation_table <- dplyr::bind_rows(
-  sorted_annotation_table,
-  extra_rows
-)
+if (nrow(aggregated_signatures) == 0) {
+  aggregated_signatures <- tibble::tibble(
+    signature_name  = c("microarray_aggregated_signature", "RNAseq_aggregated_signature"),
+    signature       = c(1, 1),
+    up_genes_num    = c(98, 98),
+    dn_genes_num    = c(98, 98),
+    technology      = c("microarray", "RNAseq")
+  )
+}
 
+aggregated_signatures <- aggregated_signatures %>%
+  arrange(factor(technology, levels = c("microarray", "RNAseq")))
+
+sorted_annotation_table <- bind_rows(sorted_annotation_table, aggregated_signatures)
+
+# assign IDs: s<row>, d<dataset> (aggregated rows share one dataset ID since series_id is NA)
 sorted_annotation_table <- sorted_annotation_table %>%
   mutate(
     signature_ID = paste0("s", row_number()),
-    number = row_number()
-  ) %>%
-  relocate(signature_ID, .before = number)
+    number = row_number(),
+    dataset_ID = paste0("d", match(series_id, unique(series_id))),
+    dataset_signature_ID = paste(signature_ID, dataset_ID, sep = "_")
+  )
 
-sorted_annotation_table <- sorted_annotation_table %>%
-  mutate(dataset_ID = paste0("d", match(series_id, unique(series_id))))
-
-sorted_annotation_table$dataset_signature_ID <- paste(
-  sorted_annotation_table$signature_ID,
-  sorted_annotation_table$dataset_ID,
-  sep = "_"
+# sanity checks before writing -- downstream figures depend on these
+stopifnot(
+  !anyDuplicated(sorted_annotation_table$signature_name),
+  sum(is_aggregated(sorted_annotation_table$signature_name)) == 2,
+  all(is_aggregated(tail(sorted_annotation_table$signature_name, 2)))
 )
+
+# individual signature names embed their ID
+indiv <- sorted_annotation_table %>% filter(!is_aggregated(signature_name))
+name_mismatch <- indiv %>%
+  filter(!endsWith(signature_name, paste0("_", dataset_signature_ID)))
+if (nrow(name_mismatch) > 0) {
+  print(select(name_mismatch, signature_name, dataset_signature_ID))
+  warning("dataset_signature_ID no longer matches the suffix in signature_name for the rows above")
+}
+
+# Warn if any signature got a different ID than in the input
+if (!is.null(previous_ids)) {
+  changed <- sorted_annotation_table %>%
+    mutate(previous = previous_ids[signature_name]) %>%
+    filter(!is.na(previous), previous != dataset_signature_ID)
+  if (nrow(changed) > 0) {
+    print(select(changed, signature_name, previous, dataset_signature_ID))
+    warning("signature IDs changed compared to the input file -- downstream figure labels will change")
+  }
+}
+
+# keep the original output columns only (drop metadata columns added to the input later)
+sorted_annotation_table <- sorted_annotation_table %>%
+  select(-any_of(c("signature_full_name", "experimental_platform", "time_point", "source", "cell_name")))
 
 write_tsv(sorted_annotation_table, file = here("figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv"))
 
