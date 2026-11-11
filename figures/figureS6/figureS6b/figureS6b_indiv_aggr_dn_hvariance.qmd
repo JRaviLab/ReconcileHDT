@@ -14,7 +14,7 @@ source(here("scripts/00_get_crossSigs_enrichedGO.R"))
 
 # add aggregated signatures to the signature info table
 ```{r read in metadata tabel}
-summary_df <- read.delim(here("figures/figure2_tableS4_S5/metadata_annotation/annotation_table.tsv"), sep = "\t", stringsAsFactors = FALSE)
+summary_df <- read.delim(here("figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv"), sep = "\t", stringsAsFactors = FALSE)
 ```
 
 ```{r define indiv file paths}
