@@ -10,7 +10,7 @@ library(gt)
 ```{r all-thresholds-plot, message=FALSE, warning=FALSE}
 thresholds <- c(0.95,0.90,0.85,0.80,0.75,0.70,0.65,0.60,0)
 summary_df <- read_tsv(
-  here("figures/figure2_tableS4_S5/metadata_annotation/annotation_table.tsv"),show_col_types = FALSE)
+  here("figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv"),show_col_types = FALSE)
 
 up_pathway_df <- read_tsv(here("figures/figureS6/figureS6a/marray_rnaseq_asinh_up_pathways_sensitivity.tsv"),show_col_types = FALSE)
 dn_pathway_df <- read_tsv(here("figures/figureS6/figureS6b/marray_rnaseq_asinh_dn_pathways_sensitivity.tsv"),show_col_types = FALSE)
