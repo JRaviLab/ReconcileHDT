@@ -54,10 +54,10 @@ process_file <- function(filepath, direction_label, summary_path) {
 # process both up- and dn-regulated pathways files
 plot_df_up <- process_file(filepath = "figures/figureS10/marray_rnaseq_up_pathways_suppl.tsv", 
                            direction_label = "Upregulated", 
-                           summary_path = "figures/figure2_tableS4_S5/metadata_annotation/annotation_table.tsv")
+                           summary_path = "figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv")
 plot_df_dn <- process_file(filepath = "figures/figureS10/marray_rnaseq_dn_pathways_suppl.tsv", 
                            direction_label = "Downregulated",
-                           summary_path = "figures/figure2_tableS4_S5/metadata_annotation/annotation_table.tsv")
+                           summary_path = "figures/figure2_tableS3_S4/metadata_annotation/annotation_table.tsv")
 
 # combine both into one dataframe
 combined_plot_df <- bind_rows(plot_df_up, plot_df_dn) %>%
